@@ -3,6 +3,7 @@ import sys
 sys.dont_write_bytecode = True
 
 import argparse
+import asyncio
 from stats import scatter
 from stats import bar
 from list_stats import compute_watched_from_official_lists
@@ -22,4 +23,4 @@ bar(args.user, "Country")
 bar(args.user, "Genre")
 bar(args.user, "Studio")
 
-compute_watched_from_official_lists(args.user)
+asyncio.run(compute_watched_from_official_lists(args.user))
