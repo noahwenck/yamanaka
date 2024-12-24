@@ -22,15 +22,15 @@ LIST_URLS = [
     "https://letterboxd.com/darrencb/list/letterboxds-top-250-horror-films/"
 ]
 
-async def compute_watched_from_official_lists(username):
+async def compute_watched_from_official_lists(username, user_films):
     """
     Computes the number of films watched by a user from all official Letterboxd lists. Prints outputs.
 
     :param username: Letterboxd Username
     """
-    user_films = json.loads(get_user_info(username).text)
+    user_films_json = json.loads(user_films)
 
-    tasks = [compute_watched_from_provided_list(username, user_films, url) for url in LIST_URLS]
+    tasks = [compute_watched_from_provided_list(username, user_films_json, url) for url in LIST_URLS]
     await asyncio.gather(*tasks)
 
 async def compute_watched_from_provided_list(username, user_films, url):

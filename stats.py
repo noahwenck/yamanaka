@@ -8,14 +8,14 @@ from gather import get_user_info
 
 JPG = ".jpg"
 
-def scatter(username):
+def scatter(username, user_films):
     """
     Generates a scatter plot of films for a specified user.
 
     Parameters:
     username (str): The username to fetch film data for.
     """
-    films = pd.read_json(io.StringIO(get_user_info(username).text))
+    films = pd.read_json(io.StringIO(user_films))
 
     sns.scatterplot(x="Year", y="Average Rating", hue="Primary Language", data=films)
     plt.legend(bbox_to_anchor=(1,1))
@@ -24,7 +24,7 @@ def scatter(username):
     Image.open(username + "-Year-AverageRating-PrimaryLanguage" + JPG).show()
     plt.clf()
 
-def bar(username, category):
+def bar(username, user_films, category):
     """
     Generates a bar chart for the given category of films for a specified user.
 
@@ -32,7 +32,7 @@ def bar(username, category):
     username (str): The username to fetch film data for.
     category (str): The category to analyze and plot (e.g., 'Director').
     """
-    films = pd.read_json(io.StringIO(get_user_info(username).text))
+    films = pd.read_json(io.StringIO(user_films))
 
     films[category] = films[category].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
     films_exploded = films.explode(category)

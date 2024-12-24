@@ -4,23 +4,26 @@ sys.dont_write_bytecode = True
 
 import argparse
 import asyncio
-from stats import scatter
-from stats import bar
-from list_stats import compute_watched_from_official_lists
+import gather
+from stats import scatter, bar
+import list_stats
 
-parser = argparse.ArgumentParser(description="Whats up", formatter_class=argparse.RawTextHelpFormatter)
+parser = argparse.ArgumentParser(description="Create some stats.", formatter_class=argparse.RawTextHelpFormatter)
 #todo: add check for if user actually exists
 parser.add_argument("user", help="Letterboxd username")
 args = parser.parse_args()
 
+print("\nGathering Letterboxd data, this may take a while (up to several minutes)\n")
+
 # Todo: cleanup / allow choice of what to do
-# Todo: store films locally (especially user films) between calls
-scatter(args.user)
+user_films = gather.get_user_info(args.user).text
 
-bar(args.user, "Director")
-bar(args.user, "Spoken Language")
-bar(args.user, "Country")
-bar(args.user, "Genre")
-bar(args.user, "Studio")
+scatter(args.user, user_films)
 
-asyncio.run(compute_watched_from_official_lists(args.user))
+bar(args.user,user_films, "Director")
+bar(args.user, user_films, "Spoken Language")
+bar(args.user, user_films, "Country")
+bar(args.user, user_films, "Genre")
+bar(args.user, user_films, "Studio")
+
+asyncio.run(list_stats.compute_watched_from_official_lists(args.user, user_films))
